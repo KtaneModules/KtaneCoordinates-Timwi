@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title>Coordinates — Keep Talking and Nobody Explodes Module</title>
+    <meta content="initial-scale=1" name="viewport">
+    <link href='//fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'>
+    <link href="css/normalize.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <style>
+        var {
+        }
+        span.footnote-marker {
+            vertical-align: super;
+            font-size: 70%;
+        }
+        table {
+            border: none;
+        }
+        td.corner {
+            border: none;
+        }
+        p.footnote {
+            font-size: 70%;
+        }
+        div.column {
+            float: left;
+            margin: 0 0 .7em;
+        }
+        div.column-1 { width: 42%; }
+        div.column-2 { width: 34%; }
+        div.column-3 { width: 22%; }
+        h4 {
+            clear: both;
+            margin: .7em 0 .2em;
+        }
+        div.footnotes {
+            position: relative;
+            margin-top: 2em;
+            padding-top: 1em;
+        }
+        div.footnotes:before {
+            border-top: 1px solid black;
+            left: 0;
+            top: 0;
+            position: absolute;
+            width: 50mm;
+            content: '';
+        }
+        table.coordinate-notations th {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="ManualContent">
+        <div class="section">
+            <div class="page page-bg-01">
+                <div class="page-header">
+                    <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                    <span class="page-header-section-title">Coordinates</span>
+                </div>
+                <div class="page-content">
+                    <img class="diagram" src="img/Component/Coordinates.svg">
+                    <h2>On the Subject of Coordinates</h2>
+
+                    <p class="flavour-text">Column first or row first?
+
+                    <p>Picture a two-dimensional grid of rows and columns. To disarm this module,
+                        determine the size of the grid, determine the positions on the grid that are
+                        illegal, then select the only legal position.
+
+                    <p>Use the left and right arrows on the module to cycle through the clues.
+                        One of the clues indicates the size of the grid, the rest is a set of
+                        positions on the grid, only one of which is legal. Use the middle
+                        button to submit your answer.
+
+                    <p>To determine the size of the grid, find the clue that is represented in any
+                        of the formats described in Table 1. The italicized letters in the table
+                        stand in for a number on the module.
+
+                    <p>To determine the illegal locations, first obtain a list of numbers as follows:
+                    <ul>
+                        <li>Put each digit in the serial number on the list.
+                        <li>For each indicator in alphabetical order, put a number on the list as indicated by Table 2.
+                            Add 1 to the number if the indicator is lit.
+                        <li>Then, for each port in alphabetical order, put a number on the list as indicated by Table 3.
+                        <li>Finally, put the number 2 on the list.
+                    </ul>
+
+                    <p>Now start with a blank grid and mark off illegal squares as you go through the list. Start in the top left
+                        corner and advance from cell to cell in scanline order<span class='footnote-marker'>[1]</span>. If you reach
+                        the bottom right, wrap back to the top left. For each number in the list, count that many unmarked squares
+                        (ignoring squares already marked off), then mark off the square you land on. Move to the next unmarked square
+                        and then move on to the next number in the list.
+
+                    <p>Finally, select the only legal grid location offered by the module. The locations may be
+                        notated in any of the formats listed in Table 4. The module may also describe locations
+                        using words such as “top”, “bottom”, “left”, “right”, “up”, “down”, “center”, “middle”,
+                        cardinal directions or clockface directions.
+
+                    <div class='footnotes'>
+                        <p class='footnote'>
+                            [1] Scanline order, also known as reading order, starts at the top-left, moves right across the row, and then continues likewise with each row from top to bottom.
+                        <p class='footnote'>
+                            [2] Cartesian order, also known as geometric order, starts at the bottom-left, moves right across the row, and then continues likewise with each row from bottom to top.
+                        <p class='footnote'>
+                            [3] Traditional Chinese reading order starts at the top-right, moves down the column, and then continues likewise with each column from right to left.
+                    </div>
+                </div>
+                <div class="page-footer relative-footer">Page 1 of 2</div>
+            </div>
+            <div class="page page-bg-01">
+                <div class="page-header">
+                    <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                    <span class="page-header-section-title">Coordinates</span>
+                </div>
+                <div class="page-content">
+                    <h4>Table 1</h4>
+                    <table>
+                        <tr><th>Format<th>How to interpret</tr>
+                        <tr><th><var>x</var><td>The number <var>x</var> is a product of two primes. The grid’s width is the larger prime, the height the smaller.</tr>
+                        <tr><th>(<var>x</var>)<td>Same as <var>x</var>, but width and height are swapped.</tr>
+                        <tr><th><var>x</var>×<var>y</var><td><var>x</var> is the width, <var>y</var> the height of the grid.</tr>
+                        <tr><th><var>x</var> by <var>y</var><td><var>x</var> is the height, <var>y</var> the width of the grid.</tr>
+                        <tr><th><var>x</var>*<var>y</var><td><var>x</var> is the total size of the grid, <var>y</var> the height.</tr>
+                        <tr><th><var>x</var> : <var>y</var><td><var>x</var> is the total size of the grid, <var>y</var> the width.</tr>
+                    </table>
+
+                    <div class='column column-1'>
+                        <h4>Table 2</h4>
+                        <table>
+                            <tr><th>BOB<td>5<th>FRQ<td>2<th>SIG<td>4</tr>
+                            <tr><th>CAR<td>4<th>IND<td>0<th>SND<td>1</tr>
+                            <tr><th>CLR<td>2<th>MSA<td>3<th>TRN<td>3</tr>
+                            <tr><th>FRK<td>1<th>NSA<td>0</tr>
+                        </table>
+                    </div>
+
+                    <div class='column column-2'>
+                        <h4>Table 3</h4>
+                        <table>
+                            <tr><th colspan='3'>DVI-D       <td>5</tr>
+                            <tr><th colspan='3'>Parallel    <td>2</tr>
+                            <tr><th>PS/2   <td>0<th>RJ-45   <td>3</tr>
+                            <tr><th colspan='3'>Serial      <td>1</tr>
+                            <tr><th colspan='3'>Stereo RCA  <td>4</tr>
+                        </table>
+                    </div>
+
+                    <div class='column column-3'>
+                        <h4>Table 4</h4>
+                        <table>
+                            <tr><th>一<td>1<th>六<td>6</tr>
+                            <tr><th>二<td>2<th>七<td>7</tr>
+                            <tr><th>三<td>3<th>八<td>8</tr>
+                            <tr><th>四<td>4<th>九<td>9</tr>
+                            <tr><th>五<td>5<th>十<td>10</tr>
+                        </table>
+                    </div>
+
+                    <h4>Table 5</h4>
+                    <table class='coordinate-notations'>
+                        <tr><th>[<var>x</var>,<var>y</var>]<td>Column, then row; top-left is [0,0].
+                        <tr><th><var>letter</var> <var>number</var><td>Column, then row; top-left is A1.
+                        <tr><th>&lt;<var>x</var>, <var>y</var>&gt;<td>Row, then column; top-left is &lt;0, 0&gt;.
+                        <tr><th><var>x</var>, <var>y</var><td>Row, then column; top-left is 1, 1.
+                        <tr><th>(<var>x</var>,<var>y</var>)<td>Column, then row; bottom-left is (0,0).
+                        <tr><th><var>letter</var>-<var>number</var><td>Column, then row; bottom-left is A-1.
+                        <tr><th>“<var>x</var>, <var>y</var>”<td>Row, then column; bottom-left is “0, 0”.
+                        <tr><th><var>x</var>/<var>y</var><td>Row, then column; bottom-left is 1/1.
+                        <tr><th>[<var>x</var>]<td>Square number in scanline order<span class='footnote-marker'>[1]</span>; top-left is [0].
+                        <tr><th><var>x</var>th<td>Square number in scanline order<span class='footnote-marker'>[1]</span>; top-left is 1st.
+                        <tr><th>#<var>x</var><td>Square number in Cartesian order<span class='footnote-marker'>[2]</span>; bottom-left is #1.
+                        <tr><th>四十七<td>Square number in Chinese reading order<span class='footnote-marker'>[3]</span>; top-right is 一.
+                            See Table 4 for Chinese numerals reference. The example shown here represents the number 47.
+                    </table>
+                </div>
+                <div class="page-footer relative-footer">Page 2 of 2</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

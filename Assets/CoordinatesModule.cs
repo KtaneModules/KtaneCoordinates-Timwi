@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Coordinates;
@@ -19,9 +20,10 @@ public class CoordinatesModule : MonoBehaviour
     public Font Chinese, NonChinese;
     public Material ChineseFontMat, NonChineseFontMat;
     public KMSelectable Left, Submit, Right;
-    public TextMesh Text;
-    public MeshRenderer TextRenderer;
+    public TextMesh Text1, Text2;
+    public MeshRenderer Text1Renderer, Text2Renderer;
 
+    private bool _currentTextIs1;
     private List<Clue> _clues;
     private int _selectedIndex;
 
@@ -42,37 +44,12 @@ public class CoordinatesModule : MonoBehaviour
         numbers.AddRange(Bomb.GetPorts().OrderBy(x => x).Select(port => portTable[port]));
         numbers.Add(2);
 
+        Debug.LogFormat(@"[Coordinates] List of numbers: {0}", numbers.JoinString(", "));
+
+        _clues = new List<Clue>();
         var size = Enumerable.Range(2, 7).SelectMany(width => Enumerable.Range(2, 7).Select(height => new { Width = width, Height = height }))
             .Where(sz => sz.Width * sz.Height > numbers.Count)
             .PickRandom();
-
-        var coordinates = Enumerable.Range(0, size.Width * size.Height).ToList();
-        var illegalCoords = new List<int>();
-        var ix = 0;
-        foreach (var num in numbers)
-        {
-            ix = (ix + num) % coordinates.Count;
-            illegalCoords.Add(coordinates[ix]);
-            coordinates.RemoveAt(ix);
-        }
-
-        Debug.LogFormat(@"All illegal coordinates in order: {0}", illegalCoords.JoinString(", "));
-
-        // Add up to 8 illegal coordinates
-        _clues = new List<Clue>();
-        for (int i = Math.Min(8, illegalCoords.Count); i >= 1; i--)
-        {
-            var icIx = Rnd.Range(0, illegalCoords.Count);
-            var illegalCoord = illegalCoords[icIx];
-            illegalCoords.RemoveAt(icIx);
-            addClue(false, illegalCoord, size.Width, size.Height);
-            Debug.LogFormat(@"Showing illegal coordinate {0} as {1}", illegalCoord, _clues.Last().Text);
-        }
-
-        // Add one of the legal coordinates
-        var correctCoordinate = coordinates.PickRandom();
-        addClue(true, correctCoordinate, size.Width, size.Height);
-        Debug.LogFormat(@"Showing correct coordinate {0} as {1}", correctCoordinate, _clues.Last().Text);
 
         // Add the size indication
         var primes = new[] { 2, 3, 5, 7 };
@@ -85,7 +62,34 @@ public class CoordinatesModule : MonoBehaviour
             case 3: _clues.Add(new Clue("{0}*{1}".Fmt(size.Width * size.Height, size.Height), false, false, 128)); break;
             case 4: _clues.Add(new Clue("{0} : {1}".Fmt(size.Width * size.Height, size.Width), false, false, 128)); break;
         }
-        Debug.LogFormat(@"Showing grid size {0}×{1} as {2}", size.Width, size.Height, _clues.Last().Text);
+        Debug.LogFormat(@"[Coordinates] Showing grid size {0}×{1} as {2}", size.Width, size.Height, _clues.Last().Text);
+
+        var coordinates = Enumerable.Range(0, size.Width * size.Height).ToList();
+        var illegalCoords = new List<int>();
+        var ix = 0;
+        foreach (var num in numbers)
+        {
+            ix = (ix + num) % coordinates.Count;
+            illegalCoords.Add(coordinates[ix]);
+            coordinates.RemoveAt(ix);
+        }
+
+        Debug.LogFormat(@"[Coordinates] All illegal coordinates in order of list: {0}", illegalCoords.JoinString(", "));
+
+        // Add up to 8 illegal coordinates
+        for (int i = Math.Min(8, illegalCoords.Count); i >= 1; i--)
+        {
+            var icIx = Rnd.Range(0, illegalCoords.Count);
+            var illegalCoord = illegalCoords[icIx];
+            illegalCoords.RemoveAt(icIx);
+            addClue(false, illegalCoord, size.Width, size.Height);
+            Debug.LogFormat(@"[Coordinates] Showing illegal coordinate {0} as {1}", illegalCoord, _clues.Last().Text.Replace("\n", " "));
+        }
+
+        // Add one of the legal coordinates
+        var correctCoordinate = coordinates.PickRandom();
+        addClue(true, correctCoordinate, size.Width, size.Height);
+        Debug.LogFormat(@"[Coordinates] Showing correct coordinate {0} as {1}", correctCoordinate, _clues.Last().Text.Replace("\n", " "));
 
         _clues.Shuffle();
 
@@ -94,10 +98,12 @@ public class CoordinatesModule : MonoBehaviour
         {
             Left.AddInteractionPunch(.5f);
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Left.transform);
+            StartCoroutine(ButtonAnimation(Left));
+            if (_clues == null)
+                return false;
 
             _selectedIndex = (_selectedIndex + _clues.Count - 1) % _clues.Count;
-            UpdateDisplay();
-
+            UpdateDisplay(false);
             return false;
         };
 
@@ -105,10 +111,12 @@ public class CoordinatesModule : MonoBehaviour
         {
             Right.AddInteractionPunch(.5f);
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Right.transform);
+            StartCoroutine(ButtonAnimation(Right));
+            if (_clues == null)
+                return false;
 
             _selectedIndex = (_selectedIndex + 1) % _clues.Count;
-            UpdateDisplay();
-
+            UpdateDisplay(true);
             return false;
         };
 
@@ -116,24 +124,74 @@ public class CoordinatesModule : MonoBehaviour
         {
             Submit.AddInteractionPunch(1f);
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Submit.transform);
+            StartCoroutine(ButtonAnimation(Submit));
+            if (_clues == null)
+                return false;
 
             if (_clues[_selectedIndex].IsCorrect)
+            {
                 Module.HandlePass();
+                _clues = null;
+            }
             else
+            {
+                Debug.LogFormat("[Coordinates] Pressed submit button on wrong answer {0}.", _clues[_selectedIndex].Text);
                 Module.HandleStrike();
+            }
 
             return false;
         };
 
-        UpdateDisplay();
+        UpdateDisplay(true);
     }
 
-    private void UpdateDisplay()
+    private IEnumerator ButtonAnimation(KMSelectable btn)
     {
-        Text.text = _clues[_selectedIndex].Text;
-        Text.font = _clues[_selectedIndex].IsChinese ? Chinese : NonChinese;
-        Text.fontSize = _clues[_selectedIndex].FontSize;
-        TextRenderer.material = _clues[_selectedIndex].IsChinese ? ChineseFontMat : NonChineseFontMat;
+        var transform = btn.transform;
+        var x = transform.localPosition.x;
+        var z = transform.localPosition.z;
+        for (int i = 0; i <= 5; i++)
+        {
+            yield return null;
+            transform.localPosition = new Vector3(x, 0.005f + 2 * (5 - i) * 0.001f, z);
+        }
+        yield return new WaitForSeconds(.05f);
+        for (int i = 0; i <= 10; i++)
+        {
+            yield return null;
+            transform.localPosition = new Vector3(x, 0.005f + i * 0.001f, z);
+        }
+    }
+
+    private IEnumerator TextAnimation(TextMesh oldText, TextMesh newText, bool up)
+    {
+        var x1 = oldText.transform.localPosition.x;
+        var y1 = oldText.transform.localPosition.y;
+        var color = oldText.color;
+        var n = 18;
+        for (int i = 0; i <= n; i++)
+        {
+            oldText.transform.localPosition = new Vector3(x1, y1, (up ? 1 : -1) * i * .2f / n);
+            oldText.color = new Color(color.r, color.g, color.b, i < n / 2 ? 1f : (n - i) / (float) (n / 2));
+            newText.transform.localPosition = new Vector3(x1, y1, (up ? -1 : 1) * (n - i) * .2f / n);
+            newText.color = new Color(color.r, color.g, color.b, i > n / 2 ? 1f : i / (float) (n / 2));
+            yield return null;
+        }
+    }
+
+    private void UpdateDisplay(bool up)
+    {
+        var oldText = _currentTextIs1 ? Text1 : Text2;
+        var newText = _currentTextIs1 ? Text2 : Text1;
+        var newRenderer = _currentTextIs1 ? Text2Renderer : Text1Renderer;
+
+        newText.text = _clues[_selectedIndex].Text;
+        newText.font = _clues[_selectedIndex].IsChinese ? Chinese : NonChinese;
+        newText.fontSize = _clues[_selectedIndex].FontSize;
+        newRenderer.material = _clues[_selectedIndex].IsChinese ? ChineseFontMat : NonChineseFontMat;
+
+        StartCoroutine(TextAnimation(oldText, newText, up));
+        _currentTextIs1 = !_currentTextIs1;
     }
 
     private void addClue(bool isCorrect, int coord, int width, int height)

@@ -76,8 +76,8 @@ public class CoordinatesModule : MonoBehaviour
 
         Debug.LogFormat(@"[Coordinates] All illegal coordinates in order of list: {0}", illegalCoords.JoinString(", "));
 
-        // Add up to 8 illegal coordinates
-        for (int i = Math.Min(8, illegalCoords.Count); i >= 1; i--)
+        // Add up to 6 illegal coordinates
+        for (int i = Math.Min(6, illegalCoords.Count); i >= 1; i--)
         {
             var icIx = Rnd.Range(0, illegalCoords.Count);
             var illegalCoord = illegalCoords[icIx];
@@ -165,16 +165,12 @@ public class CoordinatesModule : MonoBehaviour
 
     private IEnumerator TextAnimation(TextMesh oldText, TextMesh newText, bool up)
     {
-        var x1 = oldText.transform.localPosition.x;
-        var y1 = oldText.transform.localPosition.y;
         var color = oldText.color;
         var n = 18;
         for (int i = 0; i <= n; i++)
         {
-            oldText.transform.localPosition = new Vector3(x1, y1, (up ? 1 : -1) * i * .2f / n);
-            oldText.color = new Color(color.r, color.g, color.b, i < n / 2 ? 1f : (n - i) / (float) (n / 2));
-            newText.transform.localPosition = new Vector3(x1, y1, (up ? -1 : 1) * (n - i) * .2f / n);
-            newText.color = new Color(color.r, color.g, color.b, i > n / 2 ? 1f : i / (float) (n / 2));
+            oldText.color = new Color(color.r, color.g, color.b, i > 2 * n / 3 ? 0f : (2 * n / 3 - i) / (float) (2 * n / 3));
+            newText.color = new Color(color.r, color.g, color.b, i < n / 3 ? 0f : (i - n / 3) / (float) (2 * n / 3));
             yield return null;
         }
     }

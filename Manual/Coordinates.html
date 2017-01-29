@@ -8,6 +8,7 @@
     <link href='//fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'>
     <link href="css/normalize.css" rel="stylesheet" type="text/css">
     <link href="css/main.css" rel="stylesheet" type="text/css">
+    <script src='js/highlighter.js'></script>
     <style>
         var {
         }
@@ -28,8 +29,8 @@
             float: left;
             margin: 0 0 .7em;
         }
-        div.column-1 { width: 42%; }
-        div.column-2 { width: 34%; }
+        div.column-1 { width: 37.5%; }
+        div.column-2 { width: 40.5%; }
         div.column-3 { width: 22%; }
         h4 {
             clear: both;
@@ -50,6 +51,9 @@
         }
         table.coordinate-notations th {
             white-space: nowrap;
+        }
+        table.two-column-groups tr th:not(:first-child) {
+            border-left: 1mm solid black;
         }
     </style>
 </head>
@@ -92,8 +96,8 @@
                     <p>Now start with a blank grid of the size determined earlier. Mark off illegal squares as you go
                         through the list. Start in the top left corner and advance from cell to cell in scanline
                         order<span class='footnote-marker'>[1]</span>. If you reach the bottom right, wrap back to the
-                        top left. For each number in the list, count that many unmarked squares (ignoring squares
-                        already marked off), then mark off the square you land on. Move to the next unmarked square
+                        top left. For each number in the list, count that many unmarked squares ignoring squares
+                        already marked off, then mark off the square you land on. Move to the next unmarked square
                         and then move on to the next number in the list.
 
                     <p>Finally, select the only legal grid location offered by the module. The locations may be
@@ -131,7 +135,7 @@
 
                     <div class='column column-1'>
                         <h4>Table 2</h4>
-                        <table>
+                        <table class='two-column-groups'>
                             <tr><th>BOB<td>5<th>FRQ<td>2<th>SIG<td>4</tr>
                             <tr><th>CAR<td>4<th>IND<td>0<th>SND<td>1</tr>
                             <tr><th>CLR<td>2<th>MSA<td>3<th>TRN<td>3</tr>
@@ -139,20 +143,18 @@
                         </table>
                     </div>
 
-                    <div class='column column-2'>
-                        <h4>Table 3</h4>
-                        <table>
-                            <tr><th colspan='3'>DVI-D       <td>5</tr>
-                            <tr><th colspan='3'>Parallel    <td>2</tr>
-                            <tr><th>PS/2   <td>0<th>RJ-45   <td>3</tr>
-                            <tr><th colspan='3'>Serial      <td>1</tr>
-                            <tr><th colspan='3'>Stereo RCA  <td>4</tr>
-                        </table>
-                    </div>
+					<div class='column column-2'>
+						<h4>Table 3</h4>
+						<table class='two-column-groups'>
+							<tr><th>DVI-D   <td>5<th>RJ-45     <td>3</tr>
+							<tr><th>Parallel<td>2<th>Serial    <td>1</tr>
+							<tr><th>PS/2    <td>0<th>Stereo RCA<td>4</tr>
+						</table>
+					</div>
 
                     <div class='column column-3'>
                         <h4>Table 4</h4>
-                        <table>
+                        <table class='two-column-groups'>
                             <tr><th>一<td>1<th>六<td>6</tr>
                             <tr><th>二<td>2<th>七<td>7</tr>
                             <tr><th>三<td>3<th>八<td>8</tr>

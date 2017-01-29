@@ -53,16 +53,17 @@ public class CoordinatesModule : MonoBehaviour
 
         // Add the size indication
         var primes = new[] { 2, 3, 5, 7 };
-        var system = Rnd.Range(primes.Contains(size.Width) && primes.Contains(size.Height) ? 0 : 1, 5);
-        switch (system)
+        Clue clue = null;
+        switch (Rnd.Range(primes.Contains(size.Width) && primes.Contains(size.Height) ? 0 : 1, 5))
         {
-            case 0: _clues.Add(new Clue((size.Width > size.Height ? "{0}" : size.Width < size.Height ? "({0})" : Rnd.Range(0, 2) == 0 ? "{0}" : "({0})").Fmt(size.Width * size.Height), false, false, 128)); break;
-            case 1: _clues.Add(new Clue("{0}×{1}".Fmt(size.Width, size.Height), false, false, 128)); break;
-            case 2: _clues.Add(new Clue("{1} by {0}".Fmt(size.Width, size.Height), false, false, 128)); break;
-            case 3: _clues.Add(new Clue("{0}*{1}".Fmt(size.Width * size.Height, size.Height), false, false, 128)); break;
-            case 4: _clues.Add(new Clue("{0} : {1}".Fmt(size.Width * size.Height, size.Width), false, false, 128)); break;
+            case 0: clue = new Clue((size.Width > size.Height ? "{0}" : size.Width < size.Height ? "({0})" : Rnd.Range(0, 2) == 0 ? "{0}" : "({0})").Fmt(size.Width * size.Height), false, false, 128); break;
+            case 1: clue = new Clue("{0}×{1}".Fmt(size.Width, size.Height), false, false, 128, "{0}x{1}".Fmt(size.Width, size.Height)); break;
+            case 2: clue = new Clue("{1} by {0}".Fmt(size.Width, size.Height), false, false, 128); break;
+            case 3: clue = new Clue("{0}*{1}".Fmt(size.Width * size.Height, size.Height), false, false, 128); break;
+            case 4: clue = new Clue("{0} : {1}".Fmt(size.Width * size.Height, size.Width), false, false, 128); break;
         }
-        Debug.LogFormat(@"[Coordinates] Showing grid size {0}×{1} as {2}", size.Width, size.Height, _clues.Last().Text);
+        _clues.Add(clue);
+        Debug.LogFormat(@"[Coordinates] Showing grid size {0}×{1} as {2}{3}", size.Width, size.Height, clue.Text, clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra));
 
         var coordinates = Enumerable.Range(0, size.Width * size.Height).ToList();
         var illegalCoords = new List<int>();
@@ -74,7 +75,10 @@ public class CoordinatesModule : MonoBehaviour
             coordinates.RemoveAt(ix);
         }
 
-        Debug.LogFormat(@"[Coordinates] All illegal coordinates in order of list: {0}", illegalCoords.JoinString(", "));
+        var coordCh = 'A';
+        var grid = new char[size.Width * size.Height];
+        for (int i = 0; i < size.Width * size.Height; i++)
+            grid[i] = '.';
 
         // Add up to 6 illegal coordinates
         for (int i = Math.Min(6, illegalCoords.Count); i >= 1; i--)
@@ -82,14 +86,26 @@ public class CoordinatesModule : MonoBehaviour
             var icIx = Rnd.Range(0, illegalCoords.Count);
             var illegalCoord = illegalCoords[icIx];
             illegalCoords.RemoveAt(icIx);
-            addClue(false, illegalCoord, size.Width, size.Height);
-            Debug.LogFormat(@"[Coordinates] Showing illegal coordinate {0} as {1}", illegalCoord, _clues.Last().Text.Replace("\n", " "));
+            clue = addClue(false, illegalCoord, size.Width, size.Height);
+            Debug.LogFormat(@"[Coordinates] Showing illegal coordinate {0}=[{5}]=[{1}, {2}] as {3}{4}", coordCh, illegalCoord % size.Width, illegalCoord / size.Width, clue.Text.Replace("\n", " "), clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra), illegalCoord);
+            grid[illegalCoord] = coordCh;
+            coordCh++;
         }
 
         // Add one of the legal coordinates
         var correctCoordinate = coordinates.PickRandom();
-        addClue(true, correctCoordinate, size.Width, size.Height);
-        Debug.LogFormat(@"[Coordinates] Showing correct coordinate {0} as {1}", correctCoordinate, _clues.Last().Text.Replace("\n", " "));
+        clue = addClue(true, correctCoordinate, size.Width, size.Height);
+        Debug.LogFormat(@"[Coordinates] Showing correct coordinate *=[{1}, {2}] as {0}{3}", clue.Text.Replace("\n", " "), correctCoordinate % size.Width, correctCoordinate / size.Width, clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra));
+        grid[correctCoordinate] = '*';
+
+        // Log the grid
+        Debug.LogFormat("[Coordinates] Grid:\n{0}", Enumerable.Range(0, size.Height).Select(row =>
+            (grid[size.Width * row] == '*' ? "" : " ") +
+            Enumerable.Range(0, size.Width)
+                .Select(col => new { Char = grid[col + size.Width * row], Col = col, Coord = col + size.Width * row })
+                .Select(inf => inf.Char == '*' ? "[*]" : (inf.Char != '.' ? inf.Char : illegalCoords.Contains(inf.Coord) ? '#' : '.') + (inf.Col == size.Width - 1 || grid[inf.Col + 1 + size.Width * row] == '*' ? "" : " "))
+                .JoinString())
+            .JoinString("\n"));
 
         _clues.Shuffle();
 
@@ -190,7 +206,7 @@ public class CoordinatesModule : MonoBehaviour
         _currentTextIs1 = !_currentTextIs1;
     }
 
-    private void addClue(bool isCorrect, int coord, int width, int height)
+    private Clue addClue(bool isCorrect, int coord, int width, int height)
     {
         var x = coord % width;
         var y = coord / width;
@@ -249,6 +265,7 @@ public class CoordinatesModule : MonoBehaviour
 
             case 14:    // Chinese!
                 var zhIx = (width - 1 - x) * height + y + 1;
+                var origZhIx = zhIx;
                 var zh = "";
                 if (zhIx % 10 != 0)
                     zh += "?一二三四五六七八九"[zhIx % 10];
@@ -259,9 +276,10 @@ public class CoordinatesModule : MonoBehaviour
                     if (zhIx > 1)
                         zh = "??二三四五六七八九"[zhIx] + zh;
                 }
-                _clues.Add(new Clue(zh, isCorrect, true, 128));
+                _clues.Add(new Clue(zh, isCorrect, true, 128, "{0} in Chinese".Fmt(origZhIx)));
                 break;
         }
+        return _clues.Last();
     }
 
     private string ordinal(int n)

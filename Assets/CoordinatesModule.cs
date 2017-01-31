@@ -95,7 +95,7 @@ public class CoordinatesModule : MonoBehaviour
         // Add one of the legal coordinates
         var correctCoordinate = coordinates.PickRandom();
         clue = addClue(true, correctCoordinate, size.Width, size.Height);
-        Debug.LogFormat(@"[Coordinates] Showing correct coordinate *=[{1}, {2}] as {0}{3}", clue.Text.Replace("\n", " "), correctCoordinate % size.Width, correctCoordinate / size.Width, clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra));
+        Debug.LogFormat(@"[Coordinates] Showing correct coordinate *=[{4}]=[{1}, {2}] as {0}{3}", clue.Text.Replace("\n", " "), correctCoordinate % size.Width, correctCoordinate / size.Width, clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra), correctCoordinate);
         grid[correctCoordinate] = '*';
 
         // Log the grid

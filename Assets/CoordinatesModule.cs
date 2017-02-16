@@ -27,8 +27,12 @@ public class CoordinatesModule : MonoBehaviour
     private List<Clue> _clues;
     private int _selectedIndex;
 
+    private static int _moduleIdCounter = 1;
+    private int _moduleId;
+
     void Start()
     {
+        _moduleId = _moduleIdCounter++;
         Module.OnActivate = Initialization;
     }
 
@@ -44,7 +48,7 @@ public class CoordinatesModule : MonoBehaviour
         numbers.AddRange(Bomb.GetPorts().OrderBy(x => x).Select(port => portTable[port]));
         numbers.Add(2);
 
-        Debug.LogFormat(@"[Coordinates] List of numbers: {0}", numbers.JoinString(", "));
+        Debug.LogFormat(@"[Coordinates #{1}] List of numbers: {0}", numbers.JoinString(", "), _moduleId);
 
         _clues = new List<Clue>();
         var size = Enumerable.Range(2, 7).SelectMany(width => Enumerable.Range(2, 7).Select(height => new { Width = width, Height = height }))
@@ -63,7 +67,7 @@ public class CoordinatesModule : MonoBehaviour
             case 4: clue = new Clue("{0} : {1}".Fmt(size.Width * size.Height, size.Width), false, false, 128); break;
         }
         _clues.Add(clue);
-        Debug.LogFormat(@"[Coordinates] Showing grid size {0}×{1} as {2}{3}", size.Width, size.Height, clue.Text, clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra));
+        Debug.LogFormat(@"[Coordinates #{4}] Showing grid size {0}×{1} as {2}{3}", size.Width, size.Height, clue.Text, clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra), _moduleId);
 
         var coordinates = Enumerable.Range(0, size.Width * size.Height).ToList();
         var illegalCoords = new List<int>();
@@ -87,7 +91,7 @@ public class CoordinatesModule : MonoBehaviour
             var illegalCoord = illegalCoords[icIx];
             illegalCoords.RemoveAt(icIx);
             clue = addClue(false, illegalCoord, size.Width, size.Height);
-            Debug.LogFormat(@"[Coordinates] Showing illegal coordinate {0}=[{1}, {2}] as {3}{4}", coordCh, illegalCoord % size.Width, illegalCoord / size.Width, clue.Text.Replace("\n", " "), clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra));
+            Debug.LogFormat(@"[Coordinates #{5}] Showing illegal coordinate {0}=[{1}, {2}] as {3}{4}", coordCh, illegalCoord % size.Width, illegalCoord / size.Width, clue.Text.Replace("\n", " "), clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra), _moduleId);
             grid[illegalCoord] = coordCh;
             coordCh++;
         }
@@ -95,11 +99,11 @@ public class CoordinatesModule : MonoBehaviour
         // Add one of the legal coordinates
         var correctCoordinate = coordinates.PickRandom();
         clue = addClue(true, correctCoordinate, size.Width, size.Height);
-        Debug.LogFormat(@"[Coordinates] Showing correct coordinate *=[{1}, {2}] as {0}{3}", clue.Text.Replace("\n", " "), correctCoordinate % size.Width, correctCoordinate / size.Width, clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra));
+        Debug.LogFormat(@"[Coordinates #{4}] Showing correct coordinate *=[{1}, {2}] as {0}{3}", clue.Text.Replace("\n", " "), correctCoordinate % size.Width, correctCoordinate / size.Width, clue.LoggingExtra == null ? null : " ({0})".Fmt(clue.LoggingExtra), _moduleId);
         grid[correctCoordinate] = '*';
 
         // Log the grid
-        Debug.LogFormat("[Coordinates] Grid:\n{0}", Enumerable.Range(0, size.Height).Select(row =>
+        Debug.LogFormat("[Coordinates #{0}] Grid:\n{1}", _moduleId, Enumerable.Range(0, size.Height).Select(row =>
             (grid[size.Width * row] == '*' ? "" : " ") +
             Enumerable.Range(0, size.Width)
                 .Select(col => new { Char = grid[col + size.Width * row], Col = col, Coord = col + size.Width * row })
@@ -151,7 +155,7 @@ public class CoordinatesModule : MonoBehaviour
             }
             else
             {
-                Debug.LogFormat("[Coordinates] Pressed submit button on wrong answer {0}.", _clues[_selectedIndex].Text);
+                Debug.LogFormat("[Coordinates #{1}] Pressed submit button on wrong answer {0}.", _clues[_selectedIndex].Text, _moduleId);
                 Module.HandleStrike();
             }
 

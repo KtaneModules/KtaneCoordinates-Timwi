@@ -150,6 +150,7 @@ public class CoordinatesModule : MonoBehaviour
 
             if (_clues[_selectedIndex].IsCorrect)
             {
+                Debug.LogFormat("[Coordinates #{0}] Pressed submit button on correct answer. Module solved.", _moduleId);
                 Module.HandlePass();
                 _clues = null;
             }

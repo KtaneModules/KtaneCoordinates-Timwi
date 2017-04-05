@@ -10,7 +10,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5cf2299c8864afe4ab42466f546ae20d, type: 3}
   m_Name: WorkshopItem
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   WorkshopPublishedFileID: 846824461
   Title: Coordinates
   Description: 'Columns first or rows? Start counting at 0 or 1? How do [i]you[/i]
@@ -22,7 +22,9 @@ MonoBehaviour:
 
     [url=http://ktane.timwi.de/PDF/Coordinates.pdf]Manual PDF[/url]
 
-    [url=http://ktane.timwi.de/HTML/Coordinates.html]Manual HTML[/url]'
+    [url=http://ktane.timwi.de/HTML/Coordinates.html]Manual HTML[/url]
+
+    [b][url=https://www.youtube.com/watch?v=4NJ1R2zaJTs]Tutorial video[/url] (thanks Elias!)[/b]'
   PreviewImage: {fileID: 2800000, guid: bd5c1f4881f57d54481b44e4c8a7779a, type: 3}
   Tags:
   - Regular Module

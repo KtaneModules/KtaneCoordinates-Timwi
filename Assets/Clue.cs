@@ -7,12 +7,14 @@
         public bool IsChinese { get; private set; }
         public int FontSize { get; private set; }
         public string AltText { get; private set; }
-        public Clue(string text, bool correct, bool isChinese, int fontSize, string altText = null)
+        public int? System { get; private set; }
+        public Clue(string text, bool correct, bool isChinese, int fontSize, int? system = null, string altText = null)
         {
             Text = text;
             IsCorrect = correct;
             IsChinese = isChinese;
             FontSize = fontSize;
+            System = system;
             AltText = altText;
         }
 
@@ -20,7 +22,7 @@
         {
             get
             {
-                return Text + (AltText == null ? null : " (" + AltText + ")");
+                return (Text + (AltText == null ? null : " (" + AltText + ")")).Replace("\n", " ");
             }
         }
     }

@@ -43,7 +43,7 @@ public class CoordinatesModule : MonoBehaviour
 
         // Add the size indication
         var sizeSystem = Rnd.Range(0, 5);
-        var primes = new[] { 2, 3, 5, 7 };
+        var primes = new[] { 3, 5, 7 };
         var size = Enumerable.Range(3, 5).SelectMany(width => Enumerable.Range(3, 5).Select(height => new { Width = width, Height = height }))
             .Where(sz => sizeSystem != 0 || (primes.Contains(sz.Width) && primes.Contains(sz.Height)))
             .PickRandom();

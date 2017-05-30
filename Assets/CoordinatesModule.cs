@@ -247,7 +247,7 @@ public class CoordinatesModule : MonoBehaviour
                     new[] { "north-west corner", "north center", "north-east corner", "west center", "center", "east center", "south-west corner", "south center", "south-east corner" },
                     new[] { "top left", "top middle", "top right", "middle left", "middle center", "middle right", "bottom left", "bottom center", "bottom right" }
                 )[system][nearestLocation.Index];
-                _clues.Add(new Clue(s, isCorrect, false, system == 0 && dx == 0 && dy == 0 ? 92 : 64, system));
+                _clues.Add(new Clue(s, isCorrect, false, system == 0 && dx == 0 && dy == 0 ? 92 : 64, system, s.Contains('’') ? s.Replace("’", "'") : null));
                 break;
 
             case 3: _clues.Add(new Clue("[{0},{1}]".Fmt(x, y), isCorrect, false, 128, system)); break;
@@ -322,8 +322,8 @@ public class CoordinatesModule : MonoBehaviour
                     yield return Right;
                 }
 
-                if (_clues[_selectedIndex].Text.Replace(" ", "").StartsWith(stuff[1].Replace(" ", ""), StringComparison.InvariantCultureIgnoreCase) ||
-                    (_clues[_selectedIndex].AltText != null && _clues[_selectedIndex].AltText.Replace(" ", "").StartsWith(stuff[1].Replace(" ", ""), StringComparison.InvariantCultureIgnoreCase)))
+                if (_clues[_selectedIndex].Text.Replace(" ", "").Replace("\n", "").StartsWith(stuff[1].Replace(" ", "").Replace("\n", ""), StringComparison.InvariantCultureIgnoreCase) ||
+                    (_clues[_selectedIndex].AltText != null && _clues[_selectedIndex].AltText.Replace(" ", "").Replace("\n", "").StartsWith(stuff[1].Replace(" ", "").Replace("\n", ""), StringComparison.InvariantCultureIgnoreCase)))
                 {
                     yield return Submit;
                     yield return new WaitForSeconds(.1f);

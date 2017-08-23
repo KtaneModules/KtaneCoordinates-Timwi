@@ -294,6 +294,30 @@ public class CoordinatesModule : MonoBehaviour
         }
     }
 
+    private string twitchSimplify(string str)
+    {
+        var origStr = str;
+        str = str
+            .Replace(" ", "")
+            .Replace("\n", "")
+            .Replace(",", "")
+            .Replace("north", "n")
+            .Replace("south", "s")
+            .Replace("west", "w")
+            .Replace("east", "e")
+            .Replace("up", "u")
+            .Replace("down", "d")
+            .Replace("left", "l")
+            .Replace("right", "r")
+            .Replace("top", "t")
+            .Replace("bottom", "b")
+            .Replace("middle", "m")
+            .Replace("center", "c")
+            .Replace("from", "");
+        Debug.LogFormat(@"simplified ""{0}"" to ""{1}"".", origStr, str);
+        return str;
+    }
+
     IEnumerator ProcessTwitchCommand(string command)
     {
         if (_clues == null)
@@ -305,7 +329,7 @@ public class CoordinatesModule : MonoBehaviour
         {
             for (int i = 0; i < _clues.Count; i++)
             {
-                yield return new WaitForSeconds(1.5f);
+                yield return new WaitForSeconds(_clues[_selectedIndex].Text.Length > 8 ? 2.7f : 1.9f);
                 yield return Right;
                 yield return new WaitForSeconds(.1f);
                 yield return Right;
@@ -322,8 +346,8 @@ public class CoordinatesModule : MonoBehaviour
                     yield return Right;
                 }
 
-                if (_clues[_selectedIndex].Text.Replace(" ", "").Replace("\n", "").StartsWith(stuff[1].Replace(" ", "").Replace("\n", ""), StringComparison.InvariantCultureIgnoreCase) ||
-                    (_clues[_selectedIndex].AltText != null && _clues[_selectedIndex].AltText.Replace(" ", "").Replace("\n", "").StartsWith(stuff[1].Replace(" ", "").Replace("\n", ""), StringComparison.InvariantCultureIgnoreCase)))
+                if (twitchSimplify(_clues[_selectedIndex].Text).StartsWith(twitchSimplify(stuff[1]), StringComparison.InvariantCultureIgnoreCase) ||
+                    (_clues[_selectedIndex].AltText != null && twitchSimplify(_clues[_selectedIndex].AltText).StartsWith(twitchSimplify(stuff[1]), StringComparison.InvariantCultureIgnoreCase)))
                 {
                     yield return Submit;
                     yield return new WaitForSeconds(.1f);

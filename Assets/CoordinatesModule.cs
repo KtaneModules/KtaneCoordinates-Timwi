@@ -59,7 +59,7 @@ public class CoordinatesModule : MonoBehaviour
         _clues.Add(clue);
         Debug.LogFormat(@"[Coordinates #{3}] Showing grid size {0}×{1} as {2}", size.Width, size.Height, clue.LoggingText, _moduleId);
 
-        var coordCh = 'A';
+        var coordCh = 'a';
         var grid = new char[size.Width * size.Height];
         for (int i = 0; i < size.Width * size.Height; i++)
             grid[i] = '.';
@@ -74,16 +74,16 @@ public class CoordinatesModule : MonoBehaviour
         {
             illegalCoords.Add(coordinates[num]);
             clue = addClue(false, coordinates[num], size.Width, size.Height);
-            Debug.LogFormat(@"[Coordinates #{4}] Showing illegal coordinate {0}=[{1}, {2}] as {3}", coordCh, coordinates[num] % size.Width, coordinates[num] / size.Width, clue.LoggingText, _moduleId);
+            Debug.LogFormat(@"[Coordinates #{3}] Showing illegal coordinate {0}={1} as {2}", coordCh, loggingCoords(coordinates[num], size.Width), clue.LoggingText, _moduleId);
             grid[coordinates[num]] = coordCh;
             coordCh++;
         }
 
         // Generate the correct coordinate twice with different coordinate systems
         clue = addClue(true, coordinates[num], size.Width, size.Height);
-        Debug.LogFormat(@"[Coordinates #{0}] Showing correct coordinate *=[{1}, {2}] as {3}", _moduleId, coordinates[num] % size.Width, coordinates[num] / size.Width, clue.LoggingText);
-        clue = addClue(true, coordinates[num], size.Width, size.Height, clue.System);
-        Debug.LogFormat(@"[Coordinates #{0}] Showing correct coordinate *=[{1}, {2}] as {3}", _moduleId, coordinates[num] % size.Width, coordinates[num] / size.Width, clue.LoggingText);
+        Debug.LogFormat(@"[Coordinates #{0}] Showing correct coordinate *={1} as {2}", _moduleId, loggingCoords(coordinates[num], size.Width), clue.LoggingText);
+        clue = addClue(true, coordinates[num], size.Width, size.Height, avoidSystem: clue.System);
+        Debug.LogFormat(@"[Coordinates #{0}] Showing correct coordinate *={1} as {2}", _moduleId, loggingCoords(coordinates[num], size.Width), clue.LoggingText);
         grid[coordinates[num]] = '*';
 
         // Log the grid
@@ -155,6 +155,11 @@ public class CoordinatesModule : MonoBehaviour
         };
 
         UpdateDisplay(true);
+    }
+
+    private string loggingCoords(int coord, int width)
+    {
+        return char.ConvertFromUtf32(coord % width + 'A') + (coord / width + 1);
     }
 
     private IEnumerator ButtonAnimation(KMSelectable btn)

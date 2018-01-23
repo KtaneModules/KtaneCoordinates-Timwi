@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Rnd = UnityEngine.Random;
 
-namespace Coordinates
+namespace CoordinateSystems
 {
     static class Ut
     {

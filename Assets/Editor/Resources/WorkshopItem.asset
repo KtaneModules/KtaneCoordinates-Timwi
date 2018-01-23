@@ -12,21 +12,6 @@ MonoBehaviour:
   m_Name: WorkshopItem
   m_EditorClassIdentifier: 
   WorkshopPublishedFileID: 846824461
-  Title: Coordinates
-  Description: 'Columns first or rows? Start counting at 0 or 1? How do [i]you[/i]
-    say your coordinates?
-
-
-    Module created by Timwi.
-
-
-    [b]IMPORTANT:[/b] This module changed on 21 Apr, 2017. Manuals printed before
-    this date are no longer valid.
-
-
-    [url=http://ktane.timwi.de/PDF/Coordinates.pdf]Manual PDF[/url]
-
-    [url=http://ktane.timwi.de/HTML/Coordinates.html]Manual HTML[/url]'
-  PreviewImage: {fileID: 2800000, guid: bd5c1f4881f57d54481b44e4c8a7779a, type: 3}
+  Title: Coordinate Systems
   Tags:
   - Regular Module

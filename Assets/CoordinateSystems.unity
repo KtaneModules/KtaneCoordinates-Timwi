@@ -357,10 +357,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 127088, guid: f37b389c3f6aa1c45a0237eb74a8386a, type: 2}
-      propertyPath: m_Name
-      value: CoordinateSystemsModule
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f37b389c3f6aa1c45a0237eb74a8386a, type: 2}
   m_IsPrefabParent: 0

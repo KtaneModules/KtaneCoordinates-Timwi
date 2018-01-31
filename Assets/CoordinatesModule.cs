@@ -2,16 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CoordinateSystems;
+using Coordinates;
 using UnityEngine;
 
 using Rnd = UnityEngine.Random;
 
 /// <summary>
-/// On the Subject of Coordinate Systems
+/// On the Subject of Coordinates
 /// Created by Timwi
 /// </summary>
-public class CoordinateSystemsModule : MonoBehaviour
+public class CoordinatesModule : MonoBehaviour
 {
     public KMBombInfo Bomb;
     public KMBombModule Module;
@@ -57,7 +57,7 @@ public class CoordinateSystemsModule : MonoBehaviour
             case 4: clue = new Clue("{0} : {1}".Fmt(size.Width * size.Height, size.Width), false, false, 128); break;
         }
         _clues.Add(clue);
-        Debug.LogFormat(@"[Coordinate Systems #{3}] Showing grid size {0}×{1} as {2}", size.Width, size.Height, clue.LoggingText, _moduleId);
+        Debug.LogFormat(@"[Coordinates #{3}] Showing grid size {0}×{1} as {2}", size.Width, size.Height, clue.LoggingText, _moduleId);
 
         var coordCh = 'a';
         var grid = new char[size.Width * size.Height];
@@ -74,20 +74,20 @@ public class CoordinateSystemsModule : MonoBehaviour
         {
             illegalCoords.Add(coordinates[num]);
             clue = addClue(false, coordinates[num], size.Width, size.Height);
-            Debug.LogFormat(@"[Coordinate Systems #{3}] Showing illegal coordinate {0}={1} as {2}", coordCh, loggingCoords(coordinates[num], size.Width), clue.LoggingText, _moduleId);
+            Debug.LogFormat(@"[Coordinates #{3}] Showing illegal coordinate {0}={1} as {2}", coordCh, loggingCoords(coordinates[num], size.Width), clue.LoggingText, _moduleId);
             grid[coordinates[num]] = coordCh;
             coordCh++;
         }
 
         // Generate the correct coordinate twice with different coordinate systems
         clue = addClue(true, coordinates[num], size.Width, size.Height);
-        Debug.LogFormat(@"[Coordinate Systems #{0}] Showing correct coordinate *={1} as {2}", _moduleId, loggingCoords(coordinates[num], size.Width), clue.LoggingText);
+        Debug.LogFormat(@"[Coordinates #{0}] Showing correct coordinate *={1} as {2}", _moduleId, loggingCoords(coordinates[num], size.Width), clue.LoggingText);
         clue = addClue(true, coordinates[num], size.Width, size.Height, avoidSystem: clue.System);
-        Debug.LogFormat(@"[Coordinate Systems #{0}] Showing correct coordinate *={1} as {2}", _moduleId, loggingCoords(coordinates[num], size.Width), clue.LoggingText);
+        Debug.LogFormat(@"[Coordinates #{0}] Showing correct coordinate *={1} as {2}", _moduleId, loggingCoords(coordinates[num], size.Width), clue.LoggingText);
         grid[coordinates[num]] = '*';
 
         // Log the grid
-        Debug.LogFormat("[Coordinate Systems #{0}] Grid:\n{1}", _moduleId, Enumerable.Range(0, size.Height).Select(row =>
+        Debug.LogFormat("[Coordinates #{0}] Grid:\n{1}", _moduleId, Enumerable.Range(0, size.Height).Select(row =>
             (grid[size.Width * row] == '*' ? "" : " ") +
             Enumerable.Range(0, size.Width)
                 .Select(col => new { Char = grid[col + size.Width * row], Col = col, Coord = col + size.Width * row })
@@ -136,18 +136,18 @@ public class CoordinateSystemsModule : MonoBehaviour
 
             if (_clues[_selectedIndex].IsCorrect && (_firstCorrectSubmitted == null || _firstCorrectSubmitted == _selectedIndex))
             {
-                Debug.LogFormat("[Coordinate Systems #{0}] Pressed submit button on {1}: first correct answer.", _moduleId, _clues[_selectedIndex].LoggingText);
+                Debug.LogFormat("[Coordinates #{0}] Pressed submit button on {1}: first correct answer.", _moduleId, _clues[_selectedIndex].LoggingText);
                 _firstCorrectSubmitted = _selectedIndex;
             }
             else if (_clues[_selectedIndex].IsCorrect)
             {
-                Debug.LogFormat("[Coordinate Systems #{0}] Pressed submit button on {1}: second correct answer. Module solved.", _moduleId, _clues[_selectedIndex].LoggingText);
+                Debug.LogFormat("[Coordinates #{0}] Pressed submit button on {1}: second correct answer. Module solved.", _moduleId, _clues[_selectedIndex].LoggingText);
                 Module.HandlePass();
                 _clues = null;
             }
             else
             {
-                Debug.LogFormat("[Coordinate Systems #{0}] Pressed submit button on wrong answer {1}.", _moduleId, _clues[_selectedIndex].LoggingText);
+                Debug.LogFormat("[Coordinates #{0}] Pressed submit button on wrong answer {1}.", _moduleId, _clues[_selectedIndex].LoggingText);
                 Module.HandleStrike();
             }
 

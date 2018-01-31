@@ -1,4 +1,4 @@
-﻿namespace CoordinateSystems
+﻿namespace Coordinates
 {
     sealed class Clue
     {

@@ -11,8 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
   m_Name: ModConfig
   m_EditorClassIdentifier: 
-  id: CoordinateSystems
-  title: Coordinate Systems
+  id: Coordinates
+  title: Coordinates
   description: 'Columns first or rows? Start counting at 0 or 1? How do [i]you[/i]
     say your coordinates?
 
@@ -20,9 +20,9 @@ MonoBehaviour:
     Module created by Timwi.
 
 
-    [url=http://ktane.timwi.de/PDF/Coordinate%20Systems.pdf]Manual PDF[/url]
+    [url=http://ktane.timwi.de/PDF/Coordinates.pdf]Manual PDF[/url]
 
-    [url=http://ktane.timwi.de/HTML/Coordinate%20Systems.html]Manual HTML[/url]'
+    [url=http://ktane.timwi.de/HTML/Coordinates.html]Manual HTML[/url]'
   version: 1.0
   outputFolder: build
   previewImage: {fileID: 2800000, guid: bd5c1f4881f57d54481b44e4c8a7779a, type: 3}

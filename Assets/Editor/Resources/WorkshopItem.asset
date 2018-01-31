@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: WorkshopItem
   m_EditorClassIdentifier: 
   WorkshopPublishedFileID: 846824461
-  Title: Coordinate Systems
+  Title: Coordinates
   Tags:
   - Regular Module

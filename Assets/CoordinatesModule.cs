@@ -162,34 +162,52 @@ public class CoordinatesModule : MonoBehaviour
         return char.ConvertFromUtf32(coord % width + 'A') + (coord / width + 1);
     }
 
+    const float _buttonAnimationDurationIn = .1f;
+    const float _buttonAnimationDurationOut = .25f;
+    const float _textAnimationDuration = .4f;
+
     private IEnumerator ButtonAnimation(KMSelectable btn)
     {
         var transform = btn.transform;
         var x = transform.localPosition.x;
         var z = transform.localPosition.z;
-        for (int i = 0; i <= 5; i++)
+
+        var elapsed = 0f;
+        while (elapsed < _buttonAnimationDurationIn)
         {
             yield return null;
-            transform.localPosition = new Vector3(x, 0.005f + 2 * (5 - i) * 0.001f, z);
+            elapsed += Time.deltaTime;
+            transform.localPosition = new Vector3(x, 0.005f + 0.01f * (1 - elapsed / _buttonAnimationDurationIn), z);
         }
+        transform.localPosition = new Vector3(x, 0.005f, z);
+
         yield return new WaitForSeconds(.05f);
-        for (int i = 0; i <= 10; i++)
+
+        elapsed = 0f;
+        while (elapsed < _buttonAnimationDurationOut)
         {
             yield return null;
-            transform.localPosition = new Vector3(x, 0.005f + i * 0.001f, z);
+            elapsed += Time.deltaTime;
+            transform.localPosition = new Vector3(x, 0.005f + 0.01f * (elapsed / _buttonAnimationDurationOut), z);
         }
+        transform.localPosition = new Vector3(x, 0.015f, z);
     }
 
     private IEnumerator TextAnimation(TextMesh oldText, TextMesh newText, bool up)
     {
         var color = oldText.color;
-        var n = 18;
-        for (int i = 0; i <= n; i++)
+
+        var elapsed = 0f;
+        while (elapsed < _textAnimationDuration)
         {
-            oldText.color = new Color(color.r, color.g, color.b, i > 2 * n / 3 ? 0f : (2 * n / 3 - i) / (float) (2 * n / 3));
-            newText.color = new Color(color.r, color.g, color.b, i < n / 3 ? 0f : (i - n / 3) / (float) (2 * n / 3));
             yield return null;
+            elapsed += Time.deltaTime;
+            var i = (elapsed / _textAnimationDuration) * 3;
+            oldText.color = new Color(color.r, color.g, color.b, i > 2 ? 0 : (2 - i) / 2);
+            newText.color = new Color(color.r, color.g, color.b, i < 1 ? 0 : (i - 1) / 2);
         }
+        oldText.color = new Color(color.r, color.g, color.b, 0);
+        newText.color = new Color(color.r, color.g, color.b, 1);
     }
 
     private void UpdateDisplay(bool up)

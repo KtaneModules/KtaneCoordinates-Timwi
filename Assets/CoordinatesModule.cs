@@ -341,15 +341,20 @@ public class CoordinatesModule : MonoBehaviour
         return str;
     }
 
+#pragma warning disable 414
+    private string TwitchHelpMessage = @"Cycle the options with “!{0} cycle”. Submit your answer with “!{0} submit <3,2>”. Partial answers are acceptable (e.g. “!{0} submit 1 left from”). To do chinese numbers, you can write “!{0} submit chinese 12” as well as “!{0} submit 十二”.";
+#pragma warning restore 414
+
     IEnumerator ProcessTwitchCommand(string command)
     {
         if (_clues == null)
             yield break;
 
-        var stuff = command.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+        var pieces = command.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
 
-        if (stuff.Length == 1 && stuff[0].Equals("cycle", StringComparison.InvariantCultureIgnoreCase))
+        if (pieces.Length == 1 && pieces[0].Equals("cycle", StringComparison.InvariantCultureIgnoreCase))
         {
+            yield return null;
             for (int i = 0; i < _clues.Count; i++)
             {
                 yield return new WaitForSeconds(_clues[_selectedIndex].Text.Length > 8 ? 2.7f : 1.9f);
@@ -358,8 +363,9 @@ public class CoordinatesModule : MonoBehaviour
                 yield return Right;
             }
         }
-        else if (stuff.Length == 2 && stuff[0].Equals("submit", StringComparison.InvariantCultureIgnoreCase))
+        else if (pieces.Length == 2 && pieces[0].Equals("submit", StringComparison.InvariantCultureIgnoreCase))
         {
+            yield return null;
             for (int i = 0; i < _clues.Count; i++)
             {
                 if (i > 0)
@@ -369,8 +375,8 @@ public class CoordinatesModule : MonoBehaviour
                     yield return Right;
                 }
 
-                if (twitchSimplify(_clues[_selectedIndex].Text).StartsWith(twitchSimplify(stuff[1]), StringComparison.InvariantCultureIgnoreCase) ||
-                    (_clues[_selectedIndex].AltText != null && twitchSimplify(_clues[_selectedIndex].AltText).StartsWith(twitchSimplify(stuff[1]), StringComparison.InvariantCultureIgnoreCase)))
+                if (twitchSimplify(_clues[_selectedIndex].Text).StartsWith(twitchSimplify(pieces[1]), StringComparison.InvariantCultureIgnoreCase) ||
+                    (_clues[_selectedIndex].AltText != null && twitchSimplify(_clues[_selectedIndex].AltText).StartsWith(twitchSimplify(pieces[1]), StringComparison.InvariantCultureIgnoreCase)))
                 {
                     yield return Submit;
                     yield return new WaitForSeconds(.1f);

@@ -319,11 +319,9 @@ public class CoordinatesModule : MonoBehaviour
 
     private string twitchSimplify(string str)
     {
-        var origStr = str;
         str = str
             .Replace(" ", "")
             .Replace("\n", "")
-            .Replace(",", "")
             .Replace("north", "n")
             .Replace("south", "s")
             .Replace("west", "w")
@@ -337,7 +335,8 @@ public class CoordinatesModule : MonoBehaviour
             .Replace("middle", "m")
             .Replace("center", "c")
             .Replace("from", "");
-        Debug.LogFormat(@"simplified ""{0}"" to ""{1}"".", origStr, str);
+        if (str.Length >= 8)
+            str = str.Replace(",", "");
         return str;
     }
 

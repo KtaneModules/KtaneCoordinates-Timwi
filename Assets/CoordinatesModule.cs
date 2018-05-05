@@ -341,7 +341,7 @@ public class CoordinatesModule : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private string TwitchHelpMessage = @"Cycle the options with “!{0} cycle”. Submit your answer with “!{0} submit <3,2>”. Partial answers are acceptable (e.g. “!{0} submit 1 left from”). To do chinese numbers, you can write “!{0} submit chinese 12” as well as “!{0} submit 十二”.";
+    private string TwitchHelpMessage = @"Cycle the options with “!{0} cycle” or move right/left with “!{0} left 2”/“!{0} right 3”. Submit your answer with “!{0} submit <4,2>”. Partial answers are acceptable (e.g. “!{0} submit 1 left from”). To do chinese numbers, you can write “!{0} submit chinese 12” as well as “!{0} submit 十二”.";
 #pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand(string command)
@@ -350,16 +350,33 @@ public class CoordinatesModule : MonoBehaviour
             yield break;
 
         var pieces = command.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+        int val;
 
         if (pieces.Length == 1 && pieces[0].Equals("cycle", StringComparison.InvariantCultureIgnoreCase))
         {
             yield return null;
             for (int i = 0; i < _clues.Count; i++)
             {
-                yield return new WaitForSeconds(_clues[_selectedIndex].Text.Length > 8 ? 2.7f : 1.9f);
-                yield return Right;
+                yield return new WaitForSeconds(_clues[_selectedIndex].Text.Length > 8 ? 2.8f : 2f);
+                Right.OnInteract();
+            }
+        }
+        else if (pieces.Length == 2 && pieces[0].Equals("left", StringComparison.InvariantCultureIgnoreCase) && int.TryParse(pieces[1], out val))
+        {
+            yield return null;
+            for (int i = 0; i < val; i++)
+            {
+                Left.OnInteract();
                 yield return new WaitForSeconds(.1f);
-                yield return Right;
+            }
+        }
+        else if (pieces.Length == 2 && pieces[0].Equals("right", StringComparison.InvariantCultureIgnoreCase) && int.TryParse(pieces[1], out val))
+        {
+            yield return null;
+            for (int i = 0; i < val; i++)
+            {
+                Right.OnInteract();
+                yield return new WaitForSeconds(.1f);
             }
         }
         else if (pieces.Length == 2 && pieces[0].Equals("submit", StringComparison.InvariantCultureIgnoreCase))
@@ -369,18 +386,15 @@ public class CoordinatesModule : MonoBehaviour
             {
                 if (i > 0)
                 {
-                    yield return Right;
+                    Right.OnInteract();
                     yield return new WaitForSeconds(.1f);
-                    yield return Right;
                 }
 
                 if (twitchSimplify(_clues[_selectedIndex].Text).StartsWith(twitchSimplify(pieces[1]), StringComparison.InvariantCultureIgnoreCase) ||
                     (_clues[_selectedIndex].AltText != null && twitchSimplify(_clues[_selectedIndex].AltText).StartsWith(twitchSimplify(pieces[1]), StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    yield return Submit;
+                    Submit.OnInteract();
                     yield return new WaitForSeconds(.1f);
-                    yield return Submit;
-                    yield break;
                 }
             }
         }

@@ -341,7 +341,7 @@ public class CoordinatesModule : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private string TwitchHelpMessage = @"Cycle the options with “!{0} cycle” or move right/left with “!{0} left 2”/“!{0} right 3”. Submit your answer with “!{0} submit <4,2>”. Partial answers are acceptable (e.g. “!{0} submit 1 left from”). To do chinese numbers, you can write “!{0} submit chinese 12” as well as “!{0} submit 十二”.";
+    private readonly string TwitchHelpMessage = @"Move right/left with “!{0} left 2”/“!{0} right 3” and submit with “!{0} submit”. Alternatively, cycle the options with “!{0} cycle” and submit your answer with “!{0} submit <4,2>”. Partial answers are acceptable (e.g. “!{0} submit 1 left from”). To do Chinese numbers, you can write “!{0} submit Chinese 12” as well as “!{0} submit 十二”.";
 #pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand(string command)
@@ -358,6 +358,7 @@ public class CoordinatesModule : MonoBehaviour
             for (int i = 0; i < _clues.Count; i++)
             {
                 yield return new WaitForSeconds(_clues[_selectedIndex].Text.Length > 8 ? 2.8f : 2f);
+                yield return "trycancel";
                 Right.OnInteract();
             }
         }
@@ -378,6 +379,12 @@ public class CoordinatesModule : MonoBehaviour
                 Right.OnInteract();
                 yield return new WaitForSeconds(.1f);
             }
+        }
+        else if (pieces.Length == 1 && pieces[0].Equals("submit", StringComparison.InvariantCultureIgnoreCase))
+        {
+            yield return null;
+            yield return new[] { Submit };
+            yield break;
         }
         else if (pieces.Length == 2 && pieces[0].Equals("submit", StringComparison.InvariantCultureIgnoreCase))
         {

@@ -401,7 +401,7 @@ public class CoordinatesModule : MonoBehaviour
                     (_clues[_selectedIndex].AltText != null && twitchSimplify(_clues[_selectedIndex].AltText).StartsWith(twitchSimplify(pieces[1]), StringComparison.InvariantCultureIgnoreCase)))
                 {
                     Submit.OnInteract();
-                    yield return new WaitForSeconds(.1f);
+                    yield break;
                 }
             }
         }

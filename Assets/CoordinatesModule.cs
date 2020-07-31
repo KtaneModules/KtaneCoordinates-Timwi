@@ -404,6 +404,23 @@ public class CoordinatesModule : MonoBehaviour
                     yield break;
                 }
             }
+
+            yield return "sendtochaterror {0}, the specified coordinate is not on the module.";
+        }
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        while (_clues != null)
+        {
+            Right.OnInteract();
+            yield return new WaitForSeconds(.1f);
+
+            if (_clues[_selectedIndex].IsCorrect)
+            {
+                Submit.OnInteract();
+                yield return new WaitForSeconds(.5f);
+            }
         }
     }
 }

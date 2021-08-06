@@ -34,11 +34,7 @@ public class CoordinatesModule : MonoBehaviour
     void Start()
     {
         _moduleId = _moduleIdCounter++;
-        Module.OnActivate = Initialization;
-    }
 
-    private void Initialization()
-    {
         _clues = new List<Clue>();
 
         // Add the size indication
